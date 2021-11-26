@@ -87,10 +87,8 @@ class DirectoryComponent(tk.Frame):
         self.file_path = file_path
         if mode == 1:
             self.make_file_ui()
-            print('1')
         elif mode == 2:
             self.extras_creator()
-            print('2')
     
     def make_file_ui(self):
         self.photo_button = tk.Label(self, image=self.photo, border=0)
@@ -107,7 +105,7 @@ class DirectoryComponent(tk.Frame):
         #self.type_label.pack(side=tk.RIGHT)
     
     def extras_creator(self):
-        print('22')
+        global working_dir_label
         return_button = tk.Button(scrollable_frame, border=1, text='<==', bg='#919191', command=self.last_path_tool, font=('Consolas', 16))
         return_button.pack(side=tk.TOP, anchor=tk.W)
         working_dir_label = tk.Label(scrollable_frame, bg='#919191', text=self.working_path, font=('Consolas', 14))
@@ -124,10 +122,14 @@ class DirectoryComponent(tk.Frame):
     
 
     def last_path_tool(self):
-        last_path_list = os.path.split(self.working_path)
+        
+        last_path_list = os.path.split(self.file_path)
         last_path = os.path.join(*map(str, last_path_list[:-1]))
+        print(last_path_list)
         os.chdir(last_path)
         refresher(self.filename, self.file_path, last_path)
+        working_dir_label.config(text=last_path)
+        working_dir_label.pack(side=tk.TOP)
     
     
 
@@ -141,11 +143,12 @@ class DirectoryComponent(tk.Frame):
 def refresher(filename, file_path, clicked_folder_path):
     global scrollable_frame
     
-    print(f"refresher: {filename=} {file_path=} {clicked_folder_path=}")
+   # print(f"refresher: {filename=} {file_path=} {clicked_folder_path=}")
 
     files = os.listdir(clicked_folder_path)
     
-
+   
+    
     for w in scrollable_frame.winfo_children():
         w.destroy()
 
@@ -161,7 +164,10 @@ def refresher(filename, file_path, clicked_folder_path):
     for filename in files:
         new_file_path = os.path.join(clicked_folder_path, filename)
         print('filename:',  filename)
+
         
+        working_dir_label.config(text=file_path)
+
         
         
         
